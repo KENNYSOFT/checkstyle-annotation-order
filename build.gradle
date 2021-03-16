@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+}
+
+group 'kr.kennysoft'
+version '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.puppycrawl.tools:checkstyle:8.41'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = '8.41'
+    configFile = 'checkstyle.xml' as File
+    ignoreFailures = false
+    maxWarnings = 0
+}
+
+tasks.withType(Checkstyle) {
+    checkstyleClasspath += checkstyleMain.classpath
+}
+
+tasks.withType(Jar) {
+    dependsOn checkstyleMain, checkstyleTest
+}
