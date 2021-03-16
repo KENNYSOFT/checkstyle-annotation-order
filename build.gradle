@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'checkstyle'
+    id 'maven-publish'
 }
 
 group 'kr.kennysoft'
@@ -37,4 +38,22 @@ tasks.withType(Checkstyle) {
 
 tasks.withType(Jar) {
     dependsOn checkstyleMain, checkstyleTest
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/KENNYSOFT/checkstyle-annotation-order"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
